@@ -32,10 +32,10 @@ namespace IdentityServer4.Validation
             _responseTypeEqualityComparer = new ResponseTypeEqualityComparer();
 
         public AuthorizeRequestValidator(
-            IdentityServerOptions options, 
-            IClientStore clients, 
-            ICustomAuthorizeRequestValidator customValidator, 
-            IRedirectUriValidator uriValidator, 
+            IdentityServerOptions options,
+            IClientStore clients,
+            ICustomAuthorizeRequestValidator customValidator,
+            IRedirectUriValidator uriValidator,
             ScopeValidator scopeValidator,
             IUserSession userSession,
             ILogger<AuthorizeRequestValidator> logger)
@@ -165,11 +165,11 @@ namespace IdentityServer4.Validation
             //////////////////////////////////////////////////////////
             // check if redirect_uri is valid
             //////////////////////////////////////////////////////////
-            if (await _uriValidator.IsRedirectUriValidAsync(redirectUri, request.Client) == false)
-            {
-                LogError("Invalid redirect_uri", redirectUri, request);
-                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, "Invalid redirect_uri");
-            }
+//            if (await _uriValidator.IsRedirectUriValidAsync(redirectUri, request.Client) == false)
+//            {
+//                LogError("Invalid redirect_uri", redirectUri, request);
+//                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, "Invalid redirect_uri");
+//            }
 
             request.RedirectUri = redirectUri;
 
@@ -197,14 +197,14 @@ namespace IdentityServer4.Validation
                 return Invalid(request, OidcConstants.AuthorizeErrors.UnsupportedResponseType);
             }
 
-            // The responseType may come in in an unconventional order.  
+            // The responseType may come in in an unconventional order.
             // Use an IEqualityComparer that doesn't care about the order of multiple values.
-            // Per https://tools.ietf.org/html/rfc6749#section-3.1.1 - 
+            // Per https://tools.ietf.org/html/rfc6749#section-3.1.1 -
             // 'Extension response types MAY contain a space-delimited (%x20) list of
             // values, where the order of values does not matter (e.g., response
             // type "a b" is the same as "b a").'
-            // http://openid.net/specs/oauth-v2-multiple-response-types-1_0-03.html#terminology - 
-            // 'If a response type contains one of more space characters (%20), it is compared 
+            // http://openid.net/specs/oauth-v2-multiple-response-types-1_0-03.html#terminology -
+            // 'If a response type contains one of more space characters (%20), it is compared
             // as a space-delimited list of values in which the order of values does not matter.'
             if (!Constants.SupportedResponseTypes.Contains(responseType, _responseTypeEqualityComparer))
             {
@@ -241,12 +241,12 @@ namespace IdentityServer4.Validation
             if (request.GrantType == GrantType.AuthorizationCode || request.GrantType == GrantType.Hybrid)
             {
                 _logger.LogDebug("Checking for PKCE parameters");
-                
+
                 /////////////////////////////////////////////////////////////////////////////
                 // validate code_challenge and code_challenge_method
                 /////////////////////////////////////////////////////////////////////////////
                 var proofKeyResult = ValidatePkceParameters(request);
-                
+
                 if (proofKeyResult.IsError)
                 {
                     return proofKeyResult;
@@ -280,7 +280,7 @@ namespace IdentityServer4.Validation
                 }
             }
 
-            
+
             //////////////////////////////////////////////////////////
             // check if grant type is allowed for client
             //////////////////////////////////////////////////////////
@@ -291,7 +291,7 @@ namespace IdentityServer4.Validation
             }
 
             //////////////////////////////////////////////////////////
-            // check if response type contains an access token, 
+            // check if response type contains an access token,
             // and if client is allowed to request access token via browser
             //////////////////////////////////////////////////////////
             var responseTypes = responseType.FromSpaceSeparatedString();
@@ -324,7 +324,7 @@ namespace IdentityServer4.Validation
                     _logger.LogDebug("No PKCE used.");
                     return Valid(request);
                 }
-                
+
                 return fail;
             }
 
@@ -597,7 +597,7 @@ namespace IdentityServer4.Validation
             //////////////////////////////////////////////////////////
             // check session cookie
             //////////////////////////////////////////////////////////
-            if (_options.Endpoints.EnableCheckSessionEndpoint && 
+            if (_options.Endpoints.EnableCheckSessionEndpoint &&
                 request.Subject.IsAuthenticated())
             {
                 var sessionId = await _userSession.GetSessionIdAsync();
