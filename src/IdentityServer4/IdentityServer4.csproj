@@ -13,6 +13,7 @@
     <PackageProjectUrl>https://github.com/IdentityServer/IdentityServer4</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/IdentityServer/IdentityServer4/blob/release/LICENSE</PackageLicenseUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>IdentityServer4</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
